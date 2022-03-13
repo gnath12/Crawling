@@ -1,3 +1,4 @@
+from re import I
 import requests
 from bs4 import BeautifulSoup as bs
 
@@ -9,8 +10,6 @@ soup = bs(r.text, "html.parser")
 
 weeklist_name = soup.select("div[class=col_inner]")
 
-
-
 #요일 이름 가져오기
 for weeklist in weeklist_name:
     day = weeklist.select("h4")[0].text
@@ -18,7 +17,7 @@ for weeklist in weeklist_name:
     link = weeklist.select("ul > li > div[class=thumb]")
     nav_web = dict()
     #요일별 웹툰 링크
-    for list_link in link:
+    for i, list_link in enumerate(link):
         list = list_link.select("a")[0].attrs["href"]
         nodab = "https://comic.naver.com" + list
 
@@ -30,14 +29,8 @@ for weeklist in weeklist_name:
 
         nav_web.update({title:writer})
 
-
-
-
-    print(f"{day} {len(title)}개 중 {}개 크롤링 중... {}%", end="\r")
-
-
+        print(f"{day} {len(link)}개 중 {i}개 크롤링 중... {(i/len(link))*100:.1f}%", end="\r")
 
     with open(file_name, "w", encoding="UTF-8") as f:
         for title, writer in nav_web.items():
             f.write(f"{title}\n{writer}\n")
-
