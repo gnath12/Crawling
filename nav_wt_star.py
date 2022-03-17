@@ -9,6 +9,7 @@ soup = bs(r.text, "html.parser")
 
 weeklist_link = soup.select("ul[class=category_tab] > li")
 new_url = []
+nav_web = dict()
 # 요일별 웹툰
 for link in weeklist_link:
     weekname = link.select("a")[0].attrs["href"]
@@ -25,3 +26,8 @@ for week_list in new_url[1:-1]:
         title = soup.select("ul[class=img_list] > li > div[class=thumb] > a")[0].attrs["title"]
         st_scr = soup.select("div[class=rating_type] > strong")[0].text
         print(title)
+
+
+        with open("uak.txt", "w", encoding="UTF-8") as f:
+            for title, st_scr in nav_web.items():
+                f.write(f"{title}{st_scr}\n")
